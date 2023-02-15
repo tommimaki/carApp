@@ -1,58 +1,39 @@
-import React,{useState, useEffect} from 'react';
-import {Cartable} from './Cartable';
+import React, { useState, useEffect } from 'react';
+import { Cartable } from './Cartable';
 import { Car } from './interface/Car';
 import Addcar from './Addcar';
+import Header from './Header';
+import { fetchCarList, deleteCar, saveCar } from '../Restfunctions/Rest';
 
+const Carlist = () => {
+  const [carList, setCarList] = useState<Car[]>([]);
+  const [addCarDialogOpen, setAddCarDialogOpen] = useState(false);
 
-const Carlist = () =>{
-    
-    const [carList, setCarList] = useState<Car[]>([]);
+  const handleDeleteCar = (link: string) => {
+    deleteCar(link).then(() => {
+      console.log(`Deleted car: ${link}`);
+      fetchCarList().then(data => setCarList(data));
+    });
+  };
 
-    
-    const fetchCarList = () => {
-        fetch('http://carrestapi.herokuapp.com/cars')
-          .then(response => response.json())
-          .then(data => setCarList(data._embedded.cars))
-          .catch(error => console.error(error));
-      };
-    
-    const deleteCar = (link : string) => {
-        if (window.confirm("Would you like to delete selected vehicle?")){
-        fetch(link, {
-          method: 'DELETE',
-        })
-          .then(response => {
-            if (!response.ok) {
-              throw new Error('Failed to delete car.');
-            }
-            const deletedCar = carList.find(car => car._links.self.href === car._links.self.href );
-            console.log(`Deleted car: ${JSON.stringify(deletedCar)}`);
-            fetchCarList();
-          })
-          .catch(error => {
-            console.error(error);
-          });
-        }
-      };
+  const handleSaveCar = (car: Car) => {
+    saveCar(car).then(() => {
+      console.log(`Saved car: ${JSON.stringify(car)}`);
+      fetchCarList().then(data => setCarList(data));
+    });
+  };
 
-      const saveCar = (car:object) => {
-        fetch('http://carrestapi.herokuapp.com/cars', { method: 'POST', headers: { 'Content-type': 'application/json' }, body: JSON.stringify(car) })
-            .then(response => response.json())
-            .then(data =>  fetchCarList())
-            .catch(err => console.error(err))
-    }
-   
-      useEffect(() => {
-        fetchCarList();
-      }, []);
+  useEffect(() => {
+    fetchCarList().then(data => setCarList(data));
+  }, []);
 
-
-    return (
-        <div>
-            <Addcar saveCar={saveCar} />
-        <Cartable carList={carList}  deleteCar={deleteCar}/>
+  return (
+    <div>
+    <Header onAddCarClick={() => setAddCarDialogOpen(true)} />
+      <Addcar open={addCarDialogOpen} onClose={() => setAddCarDialogOpen(false)} saveCar={handleSaveCar} />
+      <Cartable carList={carList} deleteCar={handleDeleteCar} />
     </div>
   );
-}
+};
 
-export default Carlist
+export default Carlist;

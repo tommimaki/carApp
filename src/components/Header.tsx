@@ -4,19 +4,21 @@ import { Car} from './interface/Car'
 
 
 
-const Header: React.FC = ()=> {
+interface HeaderProps {
+  onAddCarClick: () => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ onAddCarClick }) =>{
 
   return (
     <AppBar position="static">
       <Toolbar>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+        <Typography variant="h4"  component="div" sx={{ flexGrow: 1, fontWeight:'bold' }}>
           Car Shop
         </Typography>
-        <Tabs>
-          <Tab label="Inventory" />
-          <Tab label="Add Cars" />
-          <Tab label="Customers" />
-        </Tabs>
+        <Button variant='outlined' color="inherit" sx={{marginRight: '20%'}} onClick={onAddCarClick}>
+          Add Car
+        </Button>
       </Toolbar>
 
     </AppBar>

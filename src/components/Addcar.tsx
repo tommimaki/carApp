@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -7,11 +7,15 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
+interface AddCarProps {
+    open: boolean;
+    onClose: () => void;
+    saveCar: (car: object) => void;
+}
 
-
-export default function Addcar(props:any) {
-    const [open, setOpen] = React.useState(false);
-    const [car, setCar] = React.useState({
+export default function Addcar(props: any) {
+    const [open, setOpen] = useState(props.open);
+    const [car, setCar] = useState({
         brand: '',
         model: '',
         color: '',
@@ -20,35 +24,32 @@ export default function Addcar(props:any) {
         price: ''
     })
 
-    const handleClickOpen = () => {
-        setOpen(true);
-    }
-
     const handleClickClose = () => {
-        setOpen(false);
+        props.onClose();
     }
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         const name = e.target.name;
-      
+
         if (value !== null) {
-          setCar({ ...car, [name]: value });
+            setCar({ ...car, [name]: value });
         }
-      };
-      
+    };
+    useEffect(() => {
+        setOpen(props.open);
+    }, [props.open]);
+
+
 
     const save = () => {
-        handleClickClose();
+        props.onClose();
         props.saveCar(car);
-    }
+    };
 
     return (
         <div>
-            <Button variant="contained" style={{ margin: 10 }} color="primary" onClick={handleClickOpen}>
-                Add new car
-            </Button>
-            <Dialog open={open} onClose={handleClickClose}>
+            <Dialog open={open} onClose={props.onClose}>
                 <DialogTitle>New car</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
@@ -123,8 +124,8 @@ export default function Addcar(props:any) {
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClickClose}>Cancel</Button>
-                    <Button onClick={save}>Add</Button>
+                    <Button variant='outlined' onClick={save}>Add</Button>
+                    <Button onClick={handleClickClose} variant='outlined' style={{ color: 'red' }} >Cancel</Button>
                 </DialogActions>
             </Dialog>
         </div>
