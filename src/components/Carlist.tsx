@@ -3,7 +3,7 @@ import { Cartable } from './Cartable';
 import { Car } from './interface/Car';
 import Addcar from './Addcar';
 import Header from './Header';
-import { fetchCarList, deleteCar, saveCar } from '../Restfunctions/Rest';
+import { fetchCarList, deleteCar, saveCar, updateCar } from '../Restfunctions/Rest';
 
 const Carlist = () => {
   const [carList, setCarList] = useState<Car[]>([]);
@@ -23,15 +23,26 @@ const Carlist = () => {
     });
   };
 
+
+  const handleUpdateCar = (car: object, link: string) => {
+    updateCar(car, link).then(() => {
+      console.log(`Updated car: ${JSON.stringify(car)}`);
+      fetchCarList().then(data => setCarList(data));
+    });
+  };
+  
+
   useEffect(() => {
     fetchCarList().then(data => setCarList(data));
   }, []);
 
+  
+
   return (
     <div>
     <Header onAddCarClick={() => setAddCarDialogOpen(true)} />
-      <Addcar open={addCarDialogOpen} onClose={() => setAddCarDialogOpen(false)} saveCar={handleSaveCar} />
-      <Cartable carList={carList} deleteCar={handleDeleteCar} />
+      <Addcar open={addCarDialogOpen} onClose={() => setAddCarDialogOpen(false)} saveCar={handleSaveCar}  />
+      <Cartable carList={carList} deleteCar={handleDeleteCar} updateCar={handleUpdateCar} />
     </div>
   );
 };

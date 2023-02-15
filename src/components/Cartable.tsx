@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { Button } from '@mui/material';
 import { Car } from './interface/Car';
+import Editcar from './Editcar';
 
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
@@ -11,9 +12,11 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
 interface Props {
   carList: Car[];
   deleteCar: (link: string) => void;
+  updateCar: (car: object, link: string) => void;
 }
 
-const Cartable: React.FC<Props> = ({ carList, deleteCar }) => {
+const Cartable: React.FC<Props> = (props: Props) => {
+  const [selectedCar, setSelectedCar] = useState({});
 
   const columns = [
     {
@@ -53,20 +56,32 @@ const Cartable: React.FC<Props> = ({ carList, deleteCar }) => {
       sortable: true,
     },
     {
+      headerName: '',
+      width: 100,
+      cellRendererFramework: (params: any) => (
+        <Button variant="contained" color="primary" onClick={() => setSelectedCar(params.data)}>
+          Edit
+        </Button>
+      ),
+    },
+
+    {
       field: 'delete',
       cellRendererFramework: (params: any) => (
         <Button
           variant='text' style={{ color: 'red' }}
           onClick={() => {
             console.log(params.value);
-            deleteCar(params.value);
+            props.deleteCar(params.value);
 
           }}>Delete</Button>
       ),
     },
   ];
 
-  const rows = carList.map(car => {
+
+
+  const rows = props.carList.map(car => {
     return {
       brand: car.brand,
       model: car.model,
@@ -90,6 +105,19 @@ const Cartable: React.FC<Props> = ({ carList, deleteCar }) => {
         columnDefs={columns}>
           
       </AgGridReact>
+      {selectedCar && (
+        <div>
+        <Editcar
+          car={selectedCar}
+          updateCar={(car: object, link: string) => {
+            props.updateCar(car, link);
+            setSelectedCar('');
+          }}
+          handleClose={() => setSelectedCar('')}
+         />
+         </div>
+      )}
+      
 
     </div>
   )
