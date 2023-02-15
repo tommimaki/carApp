@@ -1,8 +1,7 @@
 import React,{useState, useEffect} from 'react';
 import {Cartable} from './Cartable';
 import { Car } from './interface/Car';
-
-
+import Addcar from './Addcar';
 
 
 const Carlist = () =>{
@@ -36,7 +35,13 @@ const Carlist = () =>{
         }
       };
 
-      
+      const saveCar = (car:object) => {
+        fetch('http://carrestapi.herokuapp.com/cars', { method: 'POST', headers: { 'Content-type': 'application/json' }, body: JSON.stringify(car) })
+            .then(response => response.json())
+            .then(data =>  fetchCarList())
+            .catch(err => console.error(err))
+    }
+   
       useEffect(() => {
         fetchCarList();
       }, []);
@@ -44,6 +49,7 @@ const Carlist = () =>{
 
     return (
         <div>
+            <Addcar saveCar={saveCar} />
         <Cartable carList={carList}  deleteCar={deleteCar}/>
     </div>
   );

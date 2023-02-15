@@ -1,16 +1,10 @@
-import React from 'react';
-import { AppBar, Tab, Tabs, Toolbar, Typography } from '@mui/material';
-
-interface Props {
-  selectedTabIndex: number;
-  onTabChange: (index: number) => void;
-}
+import React, { useState } from 'react';
+import { AppBar, Tab, Tabs, Toolbar, Typography, Button, Dialog, DialogTitle, DialogContent, TextField } from '@mui/material';
+import { Car} from './interface/Car'
 
 
-const Header: React.FC<Props> = ({ selectedTabIndex = 0, onTabChange = () => {} })=> {
-  const handleTabChange = (event: React.ChangeEvent<{}>, newIndex: number) => {
-    onTabChange(newIndex);
-  };
+
+const Header: React.FC = ()=> {
 
   return (
     <AppBar position="static">
@@ -18,14 +12,16 @@ const Header: React.FC<Props> = ({ selectedTabIndex = 0, onTabChange = () => {} 
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           Car Shop
         </Typography>
-        <Tabs value={selectedTabIndex} onChange={handleTabChange}>
+        <Tabs>
           <Tab label="Inventory" />
           <Tab label="Add Cars" />
           <Tab label="Customers" />
         </Tabs>
       </Toolbar>
+
     </AppBar>
   );
 };
 
 export default Header;
+
