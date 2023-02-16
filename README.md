@@ -1,3 +1,10 @@
+A project made for a school course. Rest APi provided by school: http://carrestapi.herokuapp.com/cars.
+Task was to create Crud functions on the front end, plus make the data categorised and sortable.
+I used AG-Grid to create the interface:
+![image](https://user-images.githubusercontent.com/74586216/219321270-672de46b-dd5a-4da7-bf7c-a18c3e12629f.png)
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
