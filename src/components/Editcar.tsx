@@ -8,18 +8,36 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { updateCar } from '../Restfunctions/Rest';
 
+
+type Car = {
+  brand: string;
+  model: string;
+  color: string;
+  fuel: string;
+  year: number;
+  price: number;
+}; 
+
 interface Props {
-  car: object;
-  updateCar: (car: object, link: string) => void;
+car: Car;
+updateCar: (car: Car, link: string) => void;
+link: string
 }
 
 export default function Editcar(props: Props) {
   const [open, setOpen] = React.useState(false);
-  const [car, setCar] = React.useState(props.car);
+  const [car, setCar] = React.useState({
+    brand: '',
+    model: '',
+    color: '',
+    fuel: '',
+    year: 0,
+    price: 0 
+}) ;
 
   const handleClickOpen = () => {
     console.log(props.car);
-    setCar({ brand: car.brand, model: props.car.model, color: props.car.color, year: props.car.year, fuel: props.car.fuel, price: props.car.price });
+    setCar({ brand: props.car.brand, model: props.car.model, color: props.car.color, year: props.car.year, fuel: props.car.fuel, price: props.car.price});
     setOpen(true);
   }
 
@@ -32,7 +50,8 @@ export default function Editcar(props: Props) {
 
   const updateCar = () => {
     handleClickClose();
-    props.updateCar(car, props.car._links.car.href);
+    props.updateCar(car, props.link);
+    // linkki tohon nweeded
   }
 
   return (

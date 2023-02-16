@@ -16,7 +16,10 @@ interface Props {
 }
 
 const Cartable: React.FC<Props> = (props: Props) => {
-  const [selectedCar, setSelectedCar] = useState({});
+  const [selectedCar, setSelectedCar] = useState({
+    car:{},
+    link:'',
+   });
 
   const columns = [
     {
@@ -59,12 +62,10 @@ const Cartable: React.FC<Props> = (props: Props) => {
       headerName: '',
       width: 100,
       cellRendererFramework: (params: any) => (
-        <Button variant="contained" color="primary" onClick={() => setSelectedCar(params.data)}>
-          Edit
-        </Button>
+        <Editcar car={params.data} updateCar={props.updateCar} link={params.data.delete} />
       ),
     },
-
+    
     {
       field: 'delete',
       cellRendererFramework: (params: any) => (
@@ -105,19 +106,6 @@ const Cartable: React.FC<Props> = (props: Props) => {
         columnDefs={columns}>
           
       </AgGridReact>
-      {selectedCar && (
-        <div>
-        <Editcar
-          car={selectedCar}
-          updateCar={(car: object, link: string) => {
-            props.updateCar(car, link);
-            setSelectedCar('');
-          }}
-          handleClose={() => setSelectedCar('')}
-         />
-         </div>
-      )}
-      
 
     </div>
   )
